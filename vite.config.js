@@ -5,6 +5,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
+  base: '/stockrepo-front/',
   plugins: [
     vue(),
     vueDevTools(),
