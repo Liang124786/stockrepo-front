@@ -6,6 +6,16 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   base: '/stockrepo-front/',
+  build: {
+    // GitHub Pages sometimes serves cached HTML; use stable filenames to avoid 404 on hashed assets
+    rollupOptions: {
+      output: {
+        entryFileNames: 'assets/index.js',
+        chunkFileNames: 'assets/chunk-[name].js',
+        assetFileNames: 'assets/[name][extname]',
+      },
+    },
+  },
   plugins: [
     vue(),
     vueDevTools(),
