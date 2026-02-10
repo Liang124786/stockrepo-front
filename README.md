@@ -1,5 +1,7 @@
 預覽網址：https://liang124786.github.io/stockrepo-front/
 
+目前主要預覽的資料是0050成分股以及成分與0050接近的0052 006208 009816
+
 # CatStocks – Frontend
 
 台股資料視覺化與查詢系統的前端專案，  
