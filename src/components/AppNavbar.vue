@@ -1,6 +1,8 @@
 <template>
   <header class="fixed w-full top-0 z-50 bg-cat-orange-dark">
-    <nav class="flex h-16 items-center justify-between px-4">
+<nav
+  class="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4"
+>
       <!-- Left: Logo + dropdowns -->
       <div class="flex items-center gap-4">
         <RouterLink to="/" class="flex items-center">
