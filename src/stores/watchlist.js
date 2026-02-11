@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { api } from '@/api/axios'
 
 export const useWatchlistStore = defineStore('watchlist', {
   state: () => ({
@@ -17,13 +18,12 @@ export const useWatchlistStore = defineStore('watchlist', {
         return
       }
 
-      const res = await fetch('http://localhost:3000/user/profile', {
+      const { data } = await api.get('/user/profile', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
 
-      const data = await res.json()
       this.count = data?.result?.watchlist ?? 0
     },
   },
