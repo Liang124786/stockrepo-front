@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 // 你可以在 .env 設定：VITE_API_BASE_URL=http://localhost:3000/
-const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'
+const baseURL = import.meta.env.VITE_API_BASE_URL 
 
 export const api = axios.create({
   baseURL,

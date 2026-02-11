@@ -185,7 +185,7 @@ const symbol = computed(() => String(route.params.symbol || ''))
 
 const symbolTitle = computed(() => `${market.value}/${symbol.value}`)
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'
+const API_BASE = import.meta.env.VITE_API_BASE_URL 
 const watchlistStore = useWatchlistStore()
 const watchlistLoading = ref(false)
 const isInWatchlist = ref(false)

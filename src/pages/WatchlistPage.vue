@@ -78,7 +78,7 @@ import fourCats from '@/assets/four_cats.png'
 
 const router = useRouter()
 const watchlistStore = useWatchlistStore()
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'
+const API_BASE = import.meta.env.VITE_API_BASE_URL 
 const loading = ref(false)
 const q = ref('')
 const picked = ref(null)

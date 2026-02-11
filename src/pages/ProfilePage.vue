@@ -89,7 +89,7 @@ const router = useRouter()
 const watchlistPreview = ref([])
 const watchlistLoading = ref(false)
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'
+const API_BASE = import.meta.env.VITE_API_BASE_URL 
 
 const avatarSrc = computed(() => {
   const v = String(profile.value.avatar || '')
