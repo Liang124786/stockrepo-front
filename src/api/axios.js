@@ -1,7 +1,21 @@
 import axios from 'axios'
 
-// 你可以在 .env 設定：VITE_API_BASE_URL=http://localhost:3000/
-const baseURL = import.meta.env.VITE_API_BASE_URL 
+const rawBaseURL = import.meta.env.VITE_API_BASE_URL
+
+const baseURL = (() => {
+  const v = String(rawBaseURL || '').trim().replace(/\/+$/, '')
+
+  // ✅ Production：避免 build/部署時把 localhost 打進 bundle
+  if (import.meta.env.PROD) {
+    if (!v || /localhost|127\.0\.0\.1/.test(v)) {
+      return 'https://stockrepo-back.onrender.com'
+    }
+    return v
+  }
+
+  // ✅ Dev：沒填就回 localhost
+  return v || 'http://localhost:3000'
+})()
 
 export const api = axios.create({
   baseURL,
