@@ -1,4 +1,4 @@
-import api from './axios'
+import { api } from './axios'
 const USERS_PATH = '/user'
 
 export const registerUser = async (payload) => {
