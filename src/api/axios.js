@@ -3,18 +3,18 @@ import axios from 'axios'
 const rawBaseURL = import.meta.env.VITE_API_BASE_URL
 
 const baseURL = (() => {
-  const v = String(rawBaseURL || '').trim().replace(/\/+$/, '')
+  const value = String(rawBaseURL || '').trim().replace(/\/+$/, '')
 
-  // ✅ Production：避免 build/部署時把 localhost 打進 bundle
+  // Production：避免 build/部署時把 localhost 打進 bundle
   if (import.meta.env.PROD) {
-    if (!v || /localhost|127\.0\.0\.1/.test(v)) {
+    if (!value || /localhost|127\.0\.0\.1/.test(value)) {
       return 'https://stockrepo-back.onrender.com'
     }
-    return v
+    return value
   }
 
-  // ✅ Dev：沒填就回 localhost
-  return v || 'http://localhost:3000'
+  // 沒填就回 localhost
+  return value || 'http://localhost:3000'
 })()
 
 export const api = axios.create({
@@ -22,12 +22,12 @@ export const api = axios.create({
   timeout: 15000,
 })
 
-// --- Token 讀取策略：先用 localStorage（之後你也可以改成 Pinia 管） ---
+// Token 讀取策略：用 localStorage
 const getToken = () => {
   return localStorage.getItem('token') || ''
 }
 
-// --- Request interceptor：自動掛 Authorization ---
+// Request interceptor：自動掛 Authorization
 api.interceptors.request.use(
   (config) => {
     const token = getToken()
@@ -40,7 +40,7 @@ api.interceptors.request.use(
   (error) => Promise.reject(error),
 )
 
-// --- Response interceptor：把錯誤統一成前端好用的格式 ---
+// Response interceptor：把錯誤統一成前端好用的格式
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -54,8 +54,3 @@ api.interceptors.response.use(
     return Promise.reject({ status, message, raw: error })
   },
 )
-
-// 小工具：讓其他檔案可以直接用同一套錯誤格式
-export const isApiError = (err) => {
-  return err && typeof err === 'object' && 'status' in err && 'message' in err
-}
