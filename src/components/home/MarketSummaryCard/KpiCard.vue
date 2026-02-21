@@ -1,7 +1,7 @@
 <template>
-  <div class="rounded-lg bg-[#FFEFD8] p-3">
-    <div class="text-xs text-[#8A6D5A]">{{ title }}</div>
-    <div class="mt-1 font-semibold text-[#4A2E1F]">{{ value }}</div>
+  <div class="rounded-lg bg-cat-calico-cream p-3">
+    <div class="text-xs text-cat-calico-brown/80">{{ title }}</div>
+    <div class="mt-1 font-semibold text-cat-calico-brown">{{ value }}</div>
   </div>
 </template>
 
