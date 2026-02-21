@@ -6,7 +6,7 @@ export const useHomeStore = defineStore('home', () => {
   const status = ref('idle')
   const errorMsg = ref('')
 
-  // 🔑 首頁的「唯一核心資料」
+  // 首頁的「唯一核心資料」
   const treemap = ref([])
 
   const load = async () => {
