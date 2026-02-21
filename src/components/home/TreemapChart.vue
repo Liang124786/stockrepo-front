@@ -147,8 +147,6 @@ const render = async () => {
   chart.resize()
 }
 
-/* ---------- watch items（唯一觸發點） ---------- */
-
 watch(
   () => props.items,
   () => {
@@ -164,7 +162,6 @@ watch(
   },
   { immediate: true },
 )
-/* ---------- cleanup ---------- */
 
 onBeforeUnmount(() => {
   window.removeEventListener('resize', resize)
