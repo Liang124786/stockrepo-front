@@ -89,72 +89,62 @@ import { useHomeStore } from '@/stores/home.store.js'
 const emit = defineEmits(['select'])
 const home = useHomeStore()
 
-const el = ref(null)
-let chart = null
-
-let ro = null
-
-const handleResize = () => {
-  if (chart) chart.resize()
-}
-
-onMounted(() => {
-  // 監聽容器尺寸變化（比只聽 window resize 更可靠）
-  if (el.value) {
-    ro = new ResizeObserver(() => {
-      if (chart) chart.resize()
-    })
-    ro.observe(el.value)
-  }
-
-  window.addEventListener('resize', handleResize)
-})
-
-// ===== 1) 將 home.treemap 映射成 TopMovers row 結構 =====
+//  表格資料
+// 將 home.treemap 映射成 TopMovers row 結構
 const mappedRows = computed(() => {
   const list = Array.isArray(home.treemap) ? home.treemap : []
 
   return list
-    .map((x) => ({
-      symbol: x.symbol ?? null,
+    .map((item) => ({
+      symbol: item.symbol ?? null,
       // treemap 的 changePct 通常是百分比（例如 1.23 表示 1.23%）
       // 這裡統一成「小數」供 UI 用（0.0123）
-      chgPct: typeof x.changePct === 'number' ? x.changePct / 100 : null,
-      close: Number(Array.isArray(x.value) ? x.value[0] : x.value),
-      PrevClose: x.PrevClose ?? null,
-      CloseDate: x.CloseDate ?? null,
-      // 你 template 會顯示 lastPrice ?? close
-      lastPrice: x.lastPrice ?? null,
+      chgPct: typeof item.changePct === 'number' ? item.changePct / 100 : null,
+      close: Number(Array.isArray(item.value) ? item.value[0] : item.value),
+      PrevClose: item.PrevClose ?? null,
+      CloseDate: item.CloseDate ?? null,
+      // template 會顯示 lastPrice ?? close
+      lastPrice: item.lastPrice ?? null,
     }))
-    .filter((r) => r.symbol && typeof r.chgPct === 'number')
+    .filter((row) => row.symbol && typeof row.chgPct === 'number')
 })
 
-// ===== 2) 漲/跌 Top10 =====
 const gainersTop10 = computed(() => {
   return [...mappedRows.value]
-    .filter((r) => r.chgPct > 0)
+    .filter((row) => row.chgPct > 0)
     .sort((a, b) => b.chgPct - a.chgPct)
     .slice(0, 10)
 })
 
 const losersTop10 = computed(() => {
   return [...mappedRows.value]
-    .filter((r) => r.chgPct < 0)
+    .filter((row) => row.chgPct < 0)
     .sort((a, b) => a.chgPct - b.chgPct) // 更負的在前
     .slice(0, 10)
 })
 
-// ===== 3) 你要的一行四欄：漲(5/5) + 跌(5/5) =====
+// 一行四欄：漲(5/5) + 跌(5/5)
 const groups = computed(() => {
-  const g = gainersTop10.value
-  const l = losersTop10.value
-  return [g.slice(0, 5), g.slice(5, 10), l.slice(0, 5), l.slice(5, 10)]
+  const gainers = gainersTop10.value
+  const losers = losersTop10.value
+  return [gainers.slice(0, 5), gainers.slice(5, 10), losers.slice(0, 5), losers.slice(5, 10)]
 })
 
-// Only render groups that actually have rows; also used to decide responsive column widths
+// 只渲染有資料的群組，同時給 template 做響應式欄寬判斷
 const visibleGroups = computed(() => {
-  return (groups.value || []).filter((g) => Array.isArray(g) && g.length > 0)
+  return (groups.value || []).filter((group) => Array.isArray(group) && group.length > 0)
 })
+
+// template 用到的 formatPct
+const formatPct = (value) => {
+  if (typeof value !== 'number') return '--'
+  return `${(value * 100).toFixed(2)}%`
+}
+
+// 柱狀圖資料與渲染 
+const el = ref(null)
+let chart = null
+let ro = null
 
 // 圖表用的 rows：建議跟表格一致（20 筆：漲10 + 跌10）
 const chartRows = computed(() => [...gainersTop10.value, ...losersTop10.value])
@@ -163,16 +153,16 @@ const chartRows = computed(() => [...gainersTop10.value, ...losersTop10.value])
 const chartRowsForAxis = computed(() => {
   const rows = chartRows.value || []
 
-  const positives = rows.filter((r) => r.chgPct >= 0)
-  const negatives = rows.filter((r) => r.chgPct < 0)
+  const positives = rows.filter((row) => row.chgPct >= 0)
+  const negatives = rows.filter((row) => row.chgPct < 0)
 
   // 漲：維持原本排序（你前面已經是由大到小）
-  const pos = positives
+  const positiveRows = positives
 
   // 跌：反轉顯示順序（關鍵）
-  const neg = [...negatives].reverse()
+  const negativeRows = [...negatives].reverse()
 
-  return [...pos, ...neg]
+  return [...positiveRows, ...negativeRows]
 })
 
 const makeOption = (rows) => {
@@ -181,7 +171,7 @@ const makeOption = (rows) => {
     grid: { left: 40, right: 20, top: 20, bottom: 30 },
     xAxis: {
       type: 'category',
-      data: rows.map((r) => r.symbol),
+      data: rows.map((row) => row.symbol),
       axisLabel: { rotate: 45 },
     },
 
@@ -206,13 +196,14 @@ const makeOption = (rows) => {
     tooltip: {
       trigger: 'axis',
       formatter: (items) => {
-        const r = rows[items[0].dataIndex]
-        const pctText = typeof r.chgPct === 'number' ? (r.chgPct * 100).toFixed(2) + '%' : '--'
+        const row = rows[items[0].dataIndex]
+        const pctText =
+          typeof row.chgPct === 'number' ? (row.chgPct * 100).toFixed(2) + '%' : '--'
         return `
           <div>
-            <strong>${r.symbol}</strong><br/>
+            <strong>${row.symbol}</strong><br/>
             漲跌幅：${pctText}<br/>
-            收盤價：${r.lastPrice ?? r.close ?? '--'}
+            收盤價：${row.lastPrice ?? row.close ?? '--'}
           </div>
         `
       },
@@ -221,7 +212,7 @@ const makeOption = (rows) => {
       {
         type: 'bar',
         // ECharts y 軸顯示百分比：這裡直接用「百分比數值」更直覺
-        data: rows.map((r) => (typeof r.chgPct === 'number' ? r.chgPct * 100 : 0)),
+        data: rows.map((row) => (typeof row.chgPct === 'number' ? row.chgPct * 100 : 0)),
         itemStyle: {
           color: (p) => (p.value >= 0 ? '#dc2626' : '#16a34a'),
         },
@@ -244,17 +235,33 @@ const renderChart = async () => {
   chart.resize()
 }
 
-// ✅ watch 正確只有 3 個參數
+const handleResize = () => {
+  if (chart) chart.resize()
+}
+
+onMounted(() => {
+  // 監聽容器尺寸變化（比只聽 window resize 更可靠）
+  if (el.value) {
+    ro = new ResizeObserver(() => {
+      if (chart) chart.resize()
+    })
+    ro.observe(el.value)
+  }
+
+  window.addEventListener('resize', handleResize)
+})
+
+// status 到 ready 時畫圖
 watch(
   () => home.status,
-  (s) => {
-    if (s !== 'ready') return
+  (status) => {
+    if (status !== 'ready') return
     renderChart()
   },
   { immediate: true },
 )
 
-// 可選：treemap 更新就重畫（避免資料晚到）
+// treemap 更新就重畫（避免資料晚到）
 watch(
   () => home.treemap,
   () => {
@@ -263,12 +270,6 @@ watch(
   },
   { deep: true },
 )
-
-// 你 template 用到的 formatPct 若原本在別處，這裡補一個最小版
-const formatPct = (v) => {
-  if (typeof v !== 'number') return '--'
-  return `${(v * 100).toFixed(2)}%`
-}
 
 onBeforeUnmount(() => {
   window.removeEventListener('resize', handleResize)
