@@ -2,7 +2,7 @@
   <section class="relative overflow-hidden">
     <!-- 背景：四隻貓 -->
     <div class="absolute inset-0">
-      <img :src="bgUrl" alt="four cats background" class="h-full w-full object-center" />
+      <img :src="bgUrl" alt="four cats background" class="absolute inset-0 object-center" />
     </div>
 
     <!-- 內容區（80vh） -->
@@ -14,7 +14,7 @@
         <!-- 搜尋欄 -->
         <div class="mt-5">
           <el-input
-            v-model="s.q"
+            v-model="stockSearchStore.keyword"
             clearable
             size="large"
             placeholder="輸入代號或公司名稱（2330 / 台積電）"
@@ -40,42 +40,42 @@ import bgUrl from '@/assets/four_cats.png'
 import { useStockSearchStore } from '@/stores/stockSearch.store.js'
 
 const router = useRouter()
-const s = useStockSearchStore()
+const stockSearchStore = useStockSearchStore()
 
-const toTWMarket = (m) => {
-  const x = String(m || '').toUpperCase()
-  if (x === 'TW' || x === 'TWSE' || x === 'TSE') return 'TW'
-  return x
+const toTWMarket = (market) => {
+  const normalizedMarket = String(market || '').toUpperCase()
+  if (normalizedMarket === 'TW' || normalizedMarket === 'TWSE' || normalizedMarket === 'TSE') return 'TW'
+  return normalizedMarket
 }
 
-const go = (it) => {
-  router.push(`/stocks/${toTWMarket(it.market)}/${String(it.symbol).toUpperCase()}`)
-  s.clear()
+const goToStock = (stockItem) => {
+  router.push(`/stocks/${toTWMarket(stockItem.market)}/${String(stockItem.symbol).toUpperCase()}`)
+  stockSearchStore.clear()
 }
 
 const onEnter = async () => {
-  const keyword = String(s.q || '').trim()
+  const keyword = String(stockSearchStore.keyword || '').trim()
   if (!keyword) return
 
-  const { items } = await s.search({ limit: 10 })
+  const { items } = await stockSearchStore.search({ limit: 10 })
 
   // 1️⃣ 純數字 → 先精準比對
   if (/^\d{4,6}$/.test(keyword)) {
     const exact = items.find((it) => String(it.symbol) === keyword)
     if (exact) {
-      go(exact)
+      goToStock(exact)
       return
     }
 
     // 2️⃣ 搜尋清單沒有，但使用者輸入的是合法代號 → 直接嘗試跳
     router.push(`/stocks/TW/${keyword}`)
-    s.clear()
+    stockSearchStore.clear()
     return
   }
 
   // 3️⃣ 非純數字，維持原本行為
   if (items.length === 1) {
-    go(items[0])
+    goToStock(items[0])
   }
 }
 </script>
