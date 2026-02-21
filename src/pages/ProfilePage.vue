@@ -1,7 +1,7 @@
 <template>
   <section class="relative">
     <div class="absolute inset-0">
-      <img :src="bg" class="absolute inset-0 h-full w-full object-center" />
+      <img :src="bg" class="absolute inset-0 object-center" />
     </div>
 
     <div class="relative min-h-[calc(100vh-64px)] flex items-center justify-center px-4">
@@ -89,7 +89,7 @@ const router = useRouter()
 const watchlistPreview = ref([])
 const watchlistLoading = ref(false)
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL 
+const API_BASE = import.meta.env.VITE_API_BASE_URL
 
 const avatarSrc = computed(() => {
   const v = String(profile.value.avatar || '')

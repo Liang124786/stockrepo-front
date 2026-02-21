@@ -5,7 +5,7 @@
       <img
         :src="bg"
         alt="four cats background"
-        class="absolute inset-0 h-full w-full object-center"
+        class="absolute inset-0  object-center"
       />
       <div class="absolute inset-0 bg-black/20"></div>
     </div>
