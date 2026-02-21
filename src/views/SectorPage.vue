@@ -5,7 +5,7 @@
       <img
         :src="fourCats"
         alt="four cats background"
-        class="absolute inset-0 h-full w-full object-center"
+        class="absolute inset-0  object-center"
       />
     </div>
     <div class="relative min-h-[calc(100vh-64px)] pt-20 pb-6 max-w-10/12 mx-auto">
