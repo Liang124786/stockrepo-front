@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { listStocks } from '@/api/stock.api.js'
 
 export const useStockSearchStore = defineStore('stockSearch', () => {
-  const q = ref('')
+  const keyword = ref('')
   const loading = ref(false)
   const errorMsg = ref('')
   const results = ref([])
@@ -16,13 +16,13 @@ export const useStockSearchStore = defineStore('stockSearch', () => {
   }
 
   const search = async ({ limit = 10 } = {}) => {
-    const keyword = normalize(q.value)
-    if (!keyword) return { items: [] }
+    const normalizedKeyword = normalize(keyword.value)
+    if (!normalizedKeyword) return { items: [] }
 
     loading.value = true
     errorMsg.value = ''
     try {
-      const res = await listStocks({ keyword, page: 1, limit })
+      const res = await listStocks({ keyword: normalizedKeyword, page: 1, limit })
       const items = res?.result?.items ?? []
       results.value = Array.isArray(items) ? items : []
       return { items: results.value }
@@ -35,5 +35,5 @@ export const useStockSearchStore = defineStore('stockSearch', () => {
     }
   }
 
-  return { q, loading, errorMsg, results, search, clear }
+  return { keyword, loading, errorMsg, results, search, clear }
 })
