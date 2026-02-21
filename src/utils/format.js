@@ -1,3 +1,5 @@
+//先放著還未使用
+
 export const isValidNum = (value) => {
   return value !== null && value !== undefined && Number.isFinite(Number(value))
 }
