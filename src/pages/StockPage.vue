@@ -190,6 +190,14 @@ const watchlistStore = useWatchlistStore()
 const watchlistLoading = ref(false)
 const isInWatchlist = ref(false)
 
+const normalizeMarketClient = (value) => {
+  const m = String(value || '')
+    .trim()
+    .toUpperCase()
+  if (m === 'TWSE' || m === 'TSE' || m === 'TPEX') return 'TW'
+  return m
+}
+
 // 右側資訊卡：優先用 latest，其次用 closePrices 最新一筆
 const info = computed(() => {
   const l = latest.value || {}
@@ -221,6 +229,7 @@ const addWatchlist = async () => {
   })
   const data = await res.json().catch(() => ({}))
   if (!res.ok) throw new Error(data?.message || '加入自選失敗')
+  return Array.isArray(data?.result) ? data.result.length : null
 }
 
 const removeWatchlist = async () => {
@@ -236,6 +245,7 @@ const removeWatchlist = async () => {
   )
   const data = await res.json().catch(() => ({}))
   if (!res.ok) throw new Error(data?.message || '移除自選失敗')
+  return Array.isArray(data?.result) ? data.result.length : null
 }
 
 const toggleWatchlist = async () => {
@@ -249,18 +259,22 @@ const toggleWatchlist = async () => {
     watchlistLoading.value = true
 
     if (isInWatchlist.value) {
-      await removeWatchlist()
+      const nextCount = await removeWatchlist()
       isInWatchlist.value = false
-      watchlistStore.setCount(Math.max(0, watchlistStore.count - 1))
+      watchlistStore.setCount(
+        Number.isInteger(nextCount) ? nextCount : Math.max(0, watchlistStore.count - 1),
+      )
       ElMessage({
         message: '已移除自選',
         type: 'success',
         customClass: 'toast-bottom !bg-cat-light !border-0 !text-slate-900',
       })
     } else {
-      await addWatchlist()
+      const nextCount = await addWatchlist()
       isInWatchlist.value = true
-      watchlistStore.setCount(watchlistStore.count + 1)
+      watchlistStore.setCount(
+        Number.isInteger(nextCount) ? nextCount : watchlistStore.count + 1,
+      )
       ElMessage({
         message: '已加入自選',
         type: 'success',
@@ -294,9 +308,17 @@ const fetchIsInWatchlist = async () => {
 
     const data = await res.json()
     const list = Array.isArray(data?.result) ? data.result : []
+    const currentMarket = normalizeMarketClient(market.value)
+    const currentSymbol = String(symbol.value || '')
+      .trim()
+      .toUpperCase()
 
     isInWatchlist.value = list.some(
-      (it) => it.market === market.value && it.symbol === symbol.value,
+      (it) =>
+        normalizeMarketClient(it.market) === currentMarket &&
+        String(it.symbol || '')
+          .trim()
+          .toUpperCase() === currentSymbol,
     )
   } catch {
     // 任何錯誤都不要影響頁面
