@@ -46,7 +46,7 @@ import DistBar from './MarketSummaryCard/DistBar.vue'
 
 const props = defineProps({
   items: { type: Array, default: () => [] },
-  limit: { type: Number, default: 30 },
+  limit: { type: Number, default: 50 },
 })
 
 const used = computed(() => (props.items || []).slice(0, props.limit))
