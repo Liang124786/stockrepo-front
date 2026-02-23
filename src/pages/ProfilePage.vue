@@ -5,7 +5,7 @@
     </div>
 
     <div class="relative min-h-[calc(100vh-64px)] flex items-center justify-center px-4">
-      <div class="w-full max-w-2xl rounded-3xl bg-cat-tuxedo-light/40 shadow-2xl p-8">
+      <div class="w-full max-w-2xl rounded-3xl bg-cat-tuxedo-light/60 shadow-2xl p-8">
         <h1 class="text-xl font-semibold mb-6">個人檔案</h1>
 
         <!-- 基本資料 -->
@@ -46,7 +46,7 @@
             <li
               v-for="it in watchlistPreview"
               :key="`${it.market}:${it.symbol}`"
-              class="flex items-center justify-between py-2 bg"
+              class="flex items-center justify-between py-2"
             >
               <div class="min-w-0">
                 <div class="font-medium">
@@ -56,7 +56,7 @@
                 <div class="text-xs opacity-70">{{ it.sector }} · {{ it.market }}</div>
               </div>
 
-              <el-button link class="text-cat-orange-dark" @click="goStock(it)">查看</el-button>
+              <el-button link class="text-cat-tuxedo-dark!" @click="goStock(it)">查看</el-button>
             </li>
           </ul>
 
