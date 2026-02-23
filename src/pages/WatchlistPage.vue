@@ -19,7 +19,7 @@
 
       <div class="grid gap-4 md:grid-cols-3">
         <!-- 左：清單 -->
-        <section class="md:col-span-2 rounded-2xl bg-cat-calico-cream/30 p-4">
+        <section class="md:col-span-2 rounded-2xl bg-cat-calico-cream p-4">
           <div class="flex items-center justify-between mb-3">
             <div class="text-sm opacity-70">我的清單</div>
             <div class="text-sm opacity-70">共 {{ filtered.length }} 檔</div>
@@ -45,7 +45,7 @@
         </section>
 
         <!-- 右：概覽 -->
-        <aside class="rounded-2xl bg-cat-calico-cream/30 p-4">
+        <aside class="rounded-2xl bg-cat-calico-cream p-4">
           <div class="text-sm opacity-70 mb-2">Stock Overview</div>
 
           <div v-if="picked" class="space-y-2">
@@ -78,7 +78,7 @@ import fourCats from '@/assets/four_cats.png'
 
 const router = useRouter()
 const watchlistStore = useWatchlistStore()
-const API_BASE = import.meta.env.VITE_API_BASE_URL 
+const API_BASE = import.meta.env.VITE_API_BASE_URL
 const loading = ref(false)
 const q = ref('')
 const picked = ref(null)
