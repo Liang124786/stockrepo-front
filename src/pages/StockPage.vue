@@ -609,7 +609,10 @@ const pagedRows = computed(() => {
   return enrichedRows.value.slice(start, start + pageSize)
 })
 
-onMounted(fetchAll)
+onMounted(async () => {
+  await fetchAll()
+  await fetchIsInWatchlist()
+})
 
 onMounted(() => {
   initKChart()
