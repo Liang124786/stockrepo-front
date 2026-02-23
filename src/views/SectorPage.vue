@@ -2,11 +2,7 @@
   <section class="relative">
     <div class="absolute inset-0">
       <!-- 4 貓背景 -->
-      <img
-        :src="fourCats"
-        alt="four cats background"
-        class="absolute inset-0  object-center"
-      />
+      <img :src="fourCats" alt="four cats background" class="w-full h-full object-center" />
     </div>
     <div class="relative min-h-[calc(100vh-64px)] pt-20 pb-6 max-w-10/12 mx-auto">
       <div class="flex items-baseline justify-between">
@@ -14,7 +10,7 @@
         <div class="text-sm opacity-70">共 {{ rows?.length || 0 }} 檔</div>
       </div>
 
-      <div class="mt-4 rounded-xl bg-cat-tuxedo-light/30 p-4">
+      <div class="mt-4 rounded-xl bg-cat-tuxedo-light/50 p-4">
         <div v-if="loading">載入中…</div>
         <div v-else-if="rows.length === 0" class="opacity-70">此產業目前沒有資料</div>
 
@@ -56,13 +52,13 @@
 
             <el-table-column prop="latestDate" label="日期" width="120" sortable>
               <template #default="{ row }">
-                <span class="text-market-flat">{{ row.latestDate || '--' }}</span>
+                <span class="text-cat-orange-dark">{{ row.latestDate || '--' }}</span>
               </template>
             </el-table-column>
 
             <el-table-column prop="sector" label="產業" min-width="140" sortable>
               <template #default="{ row }">
-                <span class="text-market-flat">{{ row.sector || '其他' }}</span>
+                <span class="text-cat-orange-dark">{{ row.sector || '其他' }}</span>
               </template>
             </el-table-column>
           </el-table>

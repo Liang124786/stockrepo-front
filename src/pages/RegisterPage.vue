@@ -2,11 +2,7 @@
   <section class="relative">
     <!-- 背景 -->
     <div class="absolute inset-0">
-      <img
-        :src="bg"
-        alt="four cats background"
-        class="absolute inset-0  object-center"
-      />
+      <img :src="bg" alt="four cats background" class="h-full w-full object-center" />
       <div class="absolute inset-0 bg-black/20"></div>
     </div>
     <!-- 內容 -->

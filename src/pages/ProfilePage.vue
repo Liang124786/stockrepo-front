@@ -1,7 +1,7 @@
 <template>
   <section class="relative">
     <div class="absolute inset-0">
-      <img :src="bg" class="absolute inset-0 object-center" />
+      <img :src="bg" class="h-full w-full object-center" />
     </div>
 
     <div class="relative min-h-[calc(100vh-64px)] flex items-center justify-center px-4">
