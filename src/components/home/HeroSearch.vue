@@ -2,7 +2,7 @@
   <section class="relative overflow-hidden">
     <!-- 背景：四隻貓 -->
     <div class="absolute inset-0">
-      <img :src="bgUrl" alt="four cats background" class="absolute inset-0 object-center" />
+      <img :src="bgUrl" alt="four cats background" class="w-full h-full object-center" />
     </div>
 
     <!-- 內容區（80vh） -->
