@@ -190,14 +190,6 @@ const watchlistStore = useWatchlistStore()
 const watchlistLoading = ref(false)
 const isInWatchlist = ref(false)
 
-const normalizeMarketClient = (value) => {
-  const m = String(value || '')
-    .trim()
-    .toUpperCase()
-  if (m === 'TWSE' || m === 'TSE' || m === 'TPEX') return 'TW'
-  return m
-}
-
 // 右側資訊卡：優先用 latest，其次用 closePrices 最新一筆
 const info = computed(() => {
   const l = latest.value || {}
@@ -308,14 +300,18 @@ const fetchIsInWatchlist = async () => {
 
     const data = await res.json()
     const list = Array.isArray(data?.result) ? data.result : []
-    const currentMarket = normalizeMarketClient(market.value)
+    const currentMarket = String(market.value || '')
+      .trim()
+      .toUpperCase()
     const currentSymbol = String(symbol.value || '')
       .trim()
       .toUpperCase()
 
     isInWatchlist.value = list.some(
       (it) =>
-        normalizeMarketClient(it.market) === currentMarket &&
+        String(it.market || '')
+          .trim()
+          .toUpperCase() === currentMarket &&
         String(it.symbol || '')
           .trim()
           .toUpperCase() === currentSymbol,

@@ -276,14 +276,13 @@ const syncAuth = () => {
 }
 
 //  Navigation helpers (search → stock)
-const toTWMarket = (m) => {
-  const x = String(m || '').toUpperCase()
-  if (x === 'TW' || x === 'TWSE' || x === 'TSE') return 'TW'
-  return x
-}
+const toRouteMarket = (m) =>
+  String(m || 'TW')
+    .trim()
+    .toUpperCase()
 
 const go = (it) => {
-  router.push(`/stocks/${toTWMarket(it.market)}/${String(it.symbol).toUpperCase()}`)
+  router.push(`/stocks/${toRouteMarket(it.market)}/${String(it.symbol).toUpperCase()}`)
   stockStore.clear()
 }
 

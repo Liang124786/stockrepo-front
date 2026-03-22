@@ -42,14 +42,13 @@ import { useStockSearchStore } from '@/stores/stockSearch.store.js'
 const router = useRouter()
 const stockSearchStore = useStockSearchStore()
 
-const toTWMarket = (market) => {
-  const normalizedMarket = String(market || '').toUpperCase()
-  if (normalizedMarket === 'TW' || normalizedMarket === 'TWSE' || normalizedMarket === 'TSE') return 'TW'
-  return normalizedMarket
-}
+const toRouteMarket = (market) =>
+  String(market || 'TW')
+    .trim()
+    .toUpperCase()
 
 const goToStock = (stockItem) => {
-  router.push(`/stocks/${toTWMarket(stockItem.market)}/${String(stockItem.symbol).toUpperCase()}`)
+  router.push(`/stocks/${toRouteMarket(stockItem.market)}/${String(stockItem.symbol).toUpperCase()}`)
   stockSearchStore.clear()
 }
 
