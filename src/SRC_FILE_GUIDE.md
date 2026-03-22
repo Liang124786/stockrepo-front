@@ -24,15 +24,12 @@
 
 - `src/pages/HomePage.vue`：首頁組裝頁，整合 Hero 搜尋、Top Movers、Treemap、市場摘要卡。
 - `src/pages/StockPage.vue`：個股詳情頁（依 market/symbol 顯示資料）。
+- `src/pages/SectorPage.vue`：產業別頁面（由 `/sector/:sector` 路由載入）。
 - `src/pages/ProfilePage.vue`：使用者個人資料頁。
 - `src/pages/WatchlistPage.vue`：使用者追蹤清單頁。
 - `src/pages/LoginPage.vue`：登入頁，送出帳密並儲存 token。
 - `src/pages/RegisterPage.vue`：註冊頁。
 - `src/pages/AdminPage.vue`：管理頁，提供健康檢查與管理操作入口（含權限 gate）。
-
-## 視圖 (`src/views`)
-
-- `src/views/SectorPage.vue`：產業別頁面（由 `/sector/:sector` 路由載入）。
 
 ## 共用元件 (`src/components`)
 
