@@ -8,7 +8,7 @@ const routes = [
   {
     path: '/sector/:sector',
     name: 'sector',
-    component: () => import('@/views/SectorPage.vue'),
+    component: () => import('@/pages/SectorPage.vue'),
   },
   {
     path: '/stocks/:market/:symbol',
