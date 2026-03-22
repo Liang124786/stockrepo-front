@@ -141,7 +141,7 @@ const formatPct = (value) => {
   return `${(value * 100).toFixed(2)}%`
 }
 
-// 柱狀圖資料與渲染 
+// 柱狀圖資料與渲染
 const el = ref(null)
 let chart = null
 let ro = null
@@ -225,6 +225,8 @@ const renderChart = async () => {
   const rows = chartRows.value
   if (!rows || rows.length === 0) return
 
+
+  // 設立一個停頓點，等home.status進入ready後往下執行
   await nextTick()
 
   if (!chart) {
@@ -270,6 +272,9 @@ watch(
   },
   { deep: true },
 )
+
+
+//切換分頁時把這個元件在瀏覽器記憶體中的圖表實例與監聽器清理掉
 
 onBeforeUnmount(() => {
   window.removeEventListener('resize', handleResize)
