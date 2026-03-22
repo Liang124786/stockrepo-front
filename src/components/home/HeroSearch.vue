@@ -58,7 +58,7 @@ const onEnter = async () => {
 
   const { items } = await stockSearchStore.search({ limit: 10 })
 
-  // 1️⃣ 純數字 → 先精準比對
+  // 這行先判斷 keyword 是不是 4 到 6 碼純數字
   if (/^\d{4,6}$/.test(keyword)) {
     const exact = items.find((it) => String(it.symbol) === keyword)
     if (exact) {
@@ -66,13 +66,13 @@ const onEnter = async () => {
       return
     }
 
-    // 2️⃣ 搜尋清單沒有，但使用者輸入的是合法代號 → 直接嘗試跳
+    // 搜尋清單沒有，但使用者輸入的是合法代號 → 直接嘗試跳
     router.push(`/stocks/TW/${keyword}`)
     stockSearchStore.clear()
     return
   }
 
-  // 3️⃣ 非純數字，維持原本行為
+  // 非純數字，維持原本行為
   if (items.length === 1) {
     goToStock(items[0])
   }
