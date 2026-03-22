@@ -59,10 +59,6 @@
 - `src/components/icons/IconSupport.vue`：支援圖示元件。
 - `src/components/icons/IconTooling.vue`：工具圖示元件。
 
-## 工具與資料
-
-- `src/utils/format.js`：數值/漲跌幅格式化與樣式 class 輔助函式。
-
 ## 樣式與資產
 
 - `src/style.css`：Tailwind CSS 入口（含 `@config`）。
