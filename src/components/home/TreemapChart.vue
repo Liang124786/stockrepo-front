@@ -107,6 +107,7 @@ const makeOption = (items) => {
 const ensureChart = async () => {
   if (chart || !el.value) return
 
+  // 放一個中斷點，等進入ready往下執行
   await nextTick()
   chart = echarts.init(el.value)
 
@@ -118,6 +119,7 @@ const ensureChart = async () => {
 
 const resize = () => chart?.resize()
 
+//等畫面和容器尺寸都穩定後，再重畫 ECharts。
 const rerenderSafely = async () => {
   // 避免容器剛顯示時尺寸尚未就緒，ECharts 會渲染成空白
   await nextTick()
@@ -126,14 +128,16 @@ const rerenderSafely = async () => {
   chart?.resize()
 }
 
+// 元件第一次掛載到畫面時，安全重繪圖表
 onMounted(() => {
   rerenderSafely()
 })
 
+// KeepAlive 快取元件重新顯示時，再安全重繪一次
 onActivated(() => {
   rerenderSafely()
 })
-
+// KeepAlive 快取元件暫時離開畫面時觸發,被保留快取
 onDeactivated(() => {
   // 保持一致：離開頁面時不做重渲染，只做 resize 清理
   chart?.resize()
@@ -155,14 +159,7 @@ watch(
   { immediate: true, deep: true },
 )
 
-watch(
-  () => (props.items || []).length,
-  () => {
-    render()
-  },
-  { immediate: true },
-)
-
+//切換分頁時把這個元件在瀏覽器記憶體中的圖表實例與監聽器清理掉
 onBeforeUnmount(() => {
   window.removeEventListener('resize', resize)
   ro?.disconnect()
