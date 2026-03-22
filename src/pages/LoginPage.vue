@@ -75,16 +75,12 @@ import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import bg from '@/assets/four_cats.png'
 import { loginUser } from '@/api/user.api'
-import { useWatchlistStore } from '@/stores/watchlist'
 
 const router = useRouter()
 const formRef = ref(null)
 const loading = ref(false)
 const serverError = ref('')
-const watchlistStore = useWatchlistStore()
 
-// 登入成功後
-watchlistStore.fetchCount()
 window.dispatchEvent(new Event('auth:changed'))
 
 const form = reactive({
